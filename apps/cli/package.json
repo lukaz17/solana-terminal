@@ -1,0 +1,20 @@
+{
+  "name": "cli",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "@local/eslint-config": "workspace:*",
+    "@local/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3",
+    "eslint": "^9.27.0",
+    "tsx": "^4.20.3",
+    "typescript": "5.8.2"
+  }
+}
