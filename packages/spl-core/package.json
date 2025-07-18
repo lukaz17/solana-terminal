@@ -1,0 +1,21 @@
+{
+  "name": "@local/spl-core",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
+    "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.1"
+  },
+  "devDependencies": {
+    "@local/eslint-config": "workspace:*",
+    "@local/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3",
+    "eslint": "^9.27.0",
+    "typescript": "5.8.2"
+  }
+}
