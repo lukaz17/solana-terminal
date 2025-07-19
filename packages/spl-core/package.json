@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
+	"main": "./src/index.ts",
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
     "@solana/spl-token": "^0.4.13",
