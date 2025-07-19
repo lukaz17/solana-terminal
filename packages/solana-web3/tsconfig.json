@@ -1,0 +1,15 @@
+{
+  "extends": "@local/typescript-config/nodejs.json",
+  "compilerOptions": {
+		"outDir": "./dist",
+		"paths": {
+			"@/*": ["./src/*"],
+		}
+  },
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

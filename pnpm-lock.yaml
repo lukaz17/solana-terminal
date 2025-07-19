@@ -113,6 +113,31 @@ importers:
         specifier: ^8.32.0
         version: 8.32.0(eslint@9.27.0)(typescript@5.8.2)
 
+  packages/solana-web3:
+    dependencies:
+      '@local/spl-core':
+        specifier: workspace:*
+        version: link:../spl-core
+      '@solana/web3.js':
+        specifier: ^1.98.1
+        version: 1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)
+    devDependencies:
+      '@local/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@local/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      eslint:
+        specifier: ^9.27.0
+        version: 9.27.0
+      typescript:
+        specifier: 5.8.2
+        version: 5.8.2
+
   packages/spl-core:
     dependencies:
       '@metaplex-foundation/mpl-token-metadata':
