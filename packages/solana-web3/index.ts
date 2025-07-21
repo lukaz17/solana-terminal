@@ -3,11 +3,16 @@ export {
 	KeypairsSigner,
 } from './context'
 export type {
-	Signer
+	Signer,
 } from './context'
 
 export {
 	getMetadataAccount,
 	getMetadataAccountForTokenMint,
-	setMetadataForFungibleToken
+	setMetadataForFungibleToken,
 } from './mpl-token-metadata'
+
+export {
+	createTokenMint,
+	getTokenMintAccount,
+} from './spl-token'
