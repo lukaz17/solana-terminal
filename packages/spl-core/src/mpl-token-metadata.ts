@@ -1,15 +1,16 @@
 import {
 	DataV2,
+	Metadata,
 	createCreateMetadataAccountV3Instruction,
 	createUpdateMetadataAccountV2Instruction
-} from '@metaplex-foundation/mpl-token-metadata';
+} from '@metaplex-foundation/mpl-token-metadata'
 import {
 	PublicKey,
 	TransactionInstruction
-} from '@solana/web3.js';
+} from '@solana/web3.js'
 import {
 	TOKEN_METADATA_PROGRAM_ID
-} from './constants';
+} from './constants'
 
 /*
  * Create a CreateMetadataAccount instruction for fungible tokens.
@@ -23,10 +24,10 @@ export function createMetadataForFungibleTokenIx(
 	metadataUpdateAuthority: PublicKey,
 	payer: PublicKey,
 ): TransactionInstruction {
-	const metadataAddress = findMetadataAddress(tokenMint);
+	const tokenMetadata = findTokenMetadataAddress(tokenMint)
 	const createMetadataInstruction = createCreateMetadataAccountV3Instruction(
 		{
-			metadata: metadataAddress,
+			metadata: tokenMetadata,
 			mint: tokenMint,
 			mintAuthority: tokenMintAuthority,
 			payer: payer,
@@ -47,14 +48,20 @@ export function createMetadataForFungibleTokenIx(
 				collectionDetails: null,
 			}
 		}
-	);
-	return createMetadataInstruction;
+	)
+	return createMetadataInstruction
+}
+
+export function deserializeMetadataAccount(
+	data: Buffer
+): Metadata {
+	return Metadata.deserialize(data)[0]
 }
 
 /**
  * Find derived address for Metadata account of a Token Mint.
  */
-export function findMetadataAddress(
+export function findTokenMetadataAddress(
 	tokenMint: PublicKey,
 ): PublicKey {
 	const [address,]: [PublicKey, number] = PublicKey.findProgramAddressSync(
@@ -65,7 +72,7 @@ export function findMetadataAddress(
 		],
 		TOKEN_METADATA_PROGRAM_ID
 	)
-	return address;
+	return address
 }
 
 /*
@@ -79,10 +86,10 @@ export function updateMetadataForFungibleTokenIx(
 	newMetadataUpdateAuthority: PublicKey | null,
 	currentMetadataUpdateAuthority: PublicKey,
 ): TransactionInstruction {
-	const metadataAddress = findMetadataAddress(tokenMint);
+	const tokenMetadata = findTokenMetadataAddress(tokenMint)
 	const updateMetadataInstruction = createUpdateMetadataAccountV2Instruction(
 		{
-			metadata: metadataAddress,
+			metadata: tokenMetadata,
 			updateAuthority: currentMetadataUpdateAuthority,
 		},
 		{
@@ -101,6 +108,6 @@ export function updateMetadataForFungibleTokenIx(
 				updateAuthority: newMetadataUpdateAuthority,
 			}
 		}
-	);
-	return updateMetadataInstruction;
+	)
+	return updateMetadataInstruction
 }

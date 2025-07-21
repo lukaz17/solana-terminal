@@ -1,6 +1,6 @@
 import {
 	PublicKey
-} from '@solana/web3.js';
+} from '@solana/web3.js'
 
 export const ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID: PublicKey = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL')
 export const TOKEN_2022_PROGRAM_ID: PublicKey = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb')

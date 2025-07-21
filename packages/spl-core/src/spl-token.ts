@@ -1,16 +1,16 @@
 import {
 	PublicKey
-} from '@solana/web3.js';
+} from '@solana/web3.js'
 import {
 	ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
 	TOKEN_PROGRAM_ID
-} from './constants';
+} from './constants'
 
 
 /**
  * Find derived address for Associated Token account of a Token Mint.
  */
-export function findAssociatedTokenAddress(
+export function findAssociatedTokenAccountAddress(
 	owner: PublicKey,
 	tokenMint: PublicKey,
 ): PublicKey {
@@ -21,6 +21,6 @@ export function findAssociatedTokenAddress(
 			tokenMint.toBuffer(),
 		],
 		ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
-	);
+	)
 	return address
 }

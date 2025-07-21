@@ -7,10 +7,11 @@ export {
 
 export {
 	createMetadataForFungibleTokenIx,
-	findMetadataAddress,
+	deserializeMetadataAccount,
+	findTokenMetadataAddress,
 	updateMetadataForFungibleTokenIx
 } from './mpl-token-metadata'
 
 export {
-	findAssociatedTokenAddress
+	findAssociatedTokenAccountAddress
 } from './spl-token'
