@@ -2,17 +2,17 @@ import {
 	DataV2,
 	Metadata,
 	createCreateMetadataAccountV3Instruction,
-	createUpdateMetadataAccountV2Instruction
+	createUpdateMetadataAccountV2Instruction,
 } from '@metaplex-foundation/mpl-token-metadata'
 import {
 	PublicKey,
-	TransactionInstruction
+	TransactionInstruction,
 } from '@solana/web3.js'
 import {
-	TOKEN_METADATA_PROGRAM_ID
+	TOKEN_METADATA_PROGRAM_ID,
 } from './constants'
 
-/*
+/**
  * Create a CreateMetadataAccount instruction for fungible tokens.
  */
 export function createMetadataForFungibleTokenIx(
@@ -52,6 +52,9 @@ export function createMetadataForFungibleTokenIx(
 	return createMetadataInstruction
 }
 
+/**
+ * Deserialize account data into Metadata object.
+ */
 export function deserializeMetadataAccount(
 	data: Buffer
 ): Metadata {
@@ -75,7 +78,7 @@ export function findTokenMetadataAddress(
 	return address
 }
 
-/*
+/**
  * Create a UpdateMetadataAccount instruction for fungible tokens.
  */
 export function updateMetadataForFungibleTokenIx(
