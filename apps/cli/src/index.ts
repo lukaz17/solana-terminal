@@ -1,5 +1,7 @@
-import { DEFAULT_MSG } from './constants.js'
+import {
+	DEFAULT_MSG
+} from './constants'
 
 (function main() {
-    console.log(DEFAULT_MSG)
+	console.log(DEFAULT_MSG)
 })()

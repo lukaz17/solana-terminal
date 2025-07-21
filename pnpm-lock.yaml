@@ -20,6 +20,12 @@ importers:
 
   apps/cli:
     dependencies:
+      '@local/solana-web3':
+        specifier: workspace:*
+        version: link:../../packages/solana-web3
+      '@solana/web3.js':
+        specifier: ^1.98.1
+        version: 1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)
       yargs:
         specifier: ^18.0.0
         version: 18.0.0
@@ -118,6 +124,12 @@ importers:
       '@local/spl-core':
         specifier: workspace:*
         version: link:../spl-core
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^2.13.0
+        version: 2.13.0(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.2)(utf-8-validate@5.0.10)
+      '@solana/spl-token':
+        specifier: ^0.4.13
+        version: 0.4.13(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.2)(utf-8-validate@5.0.10)
       '@solana/web3.js':
         specifier: ^1.98.1
         version: 1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)
