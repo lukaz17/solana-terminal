@@ -4,16 +4,20 @@ import {
 	PublicKey,
 	sendAndConfirmTransaction,
 	SendOptions,
-	Transaction
+	Transaction,
 } from '@solana/web3.js'
 
-// Abstract signer interface to support different signing mechanisms.
+/// *******
+/// Abstract signer interface to support different signing mechanisms.
+/// _______
 export interface Signer {
 	default(): PublicKey
 	sign(tx: Transaction): Promise<void>
 }
 
-// Context abstracts the underlying interaction with Solana blockchain.
+/// *******
+/// Context abstracts the underlying interaction with Solana blockchain.
+/// _______
 export class Context {
 	private _connection: Connection
 	private _sendOptions?: SendOptions
@@ -21,7 +25,7 @@ export class Context {
 
 	constructor(
 		connection: Connection,
-		signer: Signer
+		signer: Signer,
 	) {
 		this._connection = connection
 		this._signer = signer
@@ -35,17 +39,21 @@ export class Context {
 		return this._signer
 	}
 
-	// Check if an address is initialized onchain.
+	/**
+	 * Check if an address is initialized onchain.
+	 */
 	async isAddressInitialized(
-		address: PublicKey
+		address: PublicKey,
 	): Promise<boolean> {
 		const accInfo = await this._connection.getAccountInfo(address)
 		return accInfo !== null
 	}
 
-	// Check if an address is a program account.
+	/**
+	 * Check if an address is a program account.
+	 */
 	async isProgramAccount(
-		address: PublicKey
+		address: PublicKey,
 	): Promise<boolean> {
 		const accInf = await this._connection.getAccountInfo(address)
 		if (accInf === null) {
@@ -59,7 +67,9 @@ export class Context {
 		return true
 	}
 
-	// Send transaction and wait until it is confirmed.
+	/**
+	 * Send transaction and wait until it is confirmed.
+	 */
 	async sendTransaction(
 		transaction: Transaction,
 		options?: SendOptions,
@@ -72,7 +82,9 @@ export class Context {
 		)
 	}
 
-	// Sign then send transaction and wait until it is confirmed.
+	/**
+	 * Sign then send transaction and wait until it is confirmed.
+	 */
 	async signAndSendTransaction(
 		transaction: Transaction,
 		options?: SendOptions,
@@ -86,37 +98,52 @@ export class Context {
 		)
 	}
 
-	// Update connection with Solana Blockchain.
+	/**
+	 * Update connection with Solana Blockchain.
+	 */
 	useConnection(
-		connection: Connection
+		connection: Connection,
 	): void {
 		this._connection = connection
 	}
 
-	// Update connection with Solana Blockchain.
+	/**
+	 * Update connection with Solana Blockchain.
+	 */
 	useSendOptions(
-		sendOptions: SendOptions
+		sendOptions: SendOptions,
 	): void {
 		this._sendOptions = sendOptions
 	}
 
-	// Update new signer mechanism.
+	/**
+	 * Update new signer mechanism.
+	 */
 	useSigners(
-		signer: Signer
+		signer: Signer,
 	): void {
 		this._signer = signer
 	}
 }
 
+/// *******
+/// InMemory implementation of Signer.
+/// _______
 export class KeypairsSigner {
 	private _signers: Keypair[]
 
-	// Initialize with an array of Keypairs.
-	constructor(signers: Keypair[] = []) {
+	/**
+	 * Initialize with an array of Keypairs.
+	 */
+	constructor(
+		signers: Keypair[] = [],
+	) {
 		this._signers = signers
 	}
 
-	// Payer will be the first signer in the stored signers.
+	/**
+	 * Payer will be the first signer in the stored signers.
+	 */
 	default(): PublicKey {
 		if (this._signers === undefined || this._signers.length === 0) {
 			throw new Error('No keypair available')
@@ -124,16 +151,20 @@ export class KeypairsSigner {
 		return this._signers[0]!.publicKey
 	}
 
-	// Sign the transaction using the stored signers.
+	/**
+	 * Sign the transaction using the stored signers.
+	 */
 	async sign(
-		tx: Transaction
+		tx: Transaction,
 	): Promise<void> {
 		tx.sign(...this._signers)
 	}
 
-	// Update the stored signers with a new array of Keypairs.
+	/**
+	 * Update the stored signers with a new array of Keypairs.
+	 */
 	useKeypairs(
-		keypairs: Keypair[]
+		keypairs: Keypair[],
 	): void {
 		this._signers = keypairs
 	}

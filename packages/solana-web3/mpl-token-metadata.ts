@@ -4,22 +4,24 @@ import {
 import {
 	PublicKey,
 	SendOptions,
-	Transaction
+	Transaction,
 } from '@solana/web3.js'
 import {
 	createMetadataForFungibleTokenIx,
 	deserializeMetadataAccount,
 	findTokenMetadataAddress,
-	updateMetadataForFungibleTokenIx
+	updateMetadataForFungibleTokenIx,
 } from '@local/spl-core'
 import {
 	Context
 } from './context'
 
-// Get and deserialize Metadata Account using its address.
+/**
+ * Get and deserialize Metadata Account using its address.
+ */
 export async function getMetadataAccount(
 	ctx: Context,
-	tokenMetadata: PublicKey
+	tokenMetadata: PublicKey,
 ): Promise<Metadata | null> {
 	const tokenMetadataAccInfo = await ctx.connection.getAccountInfo(tokenMetadata)
 	if (tokenMetadataAccInfo === null) {
@@ -28,16 +30,20 @@ export async function getMetadataAccount(
 	return deserializeMetadataAccount(tokenMetadataAccInfo.data)
 }
 
-// Get and deserialize Metadata Account using Token Mint address.
+/**
+ * Get and deserialize Metadata Account using Token Mint address.
+ */
 export async function getMetadataAccountForTokenMint(
 	ctx: Context,
-	tokenMint: PublicKey
+	tokenMint: PublicKey,
 ): Promise<Metadata | null> {
 	const tokenMetadata = findTokenMetadataAddress(tokenMint)
 	return getMetadataAccount(ctx, tokenMetadata)
 }
 
-// Create or Update Metadata Account for a Fungible Token.
+/**
+ * Create or Update Metadata Account for a Fungible Token.
+ */
 export async function setMetadataForFungibleToken(
 	ctx: Context,
 	tokenMint: PublicKey,
@@ -46,7 +52,7 @@ export async function setMetadataForFungibleToken(
 	metadataUri: string,
 	tokenMintAuthority: PublicKey,
 	metadataUpdateAuthority: PublicKey,
-	sendOptions?: SendOptions
+	sendOptions?: SendOptions,
 ): Promise<string> {
 	const tokenMetadataAccount = await getMetadataAccountForTokenMint(ctx, tokenMint)
 	const transaction = new Transaction()
