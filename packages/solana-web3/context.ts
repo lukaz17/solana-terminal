@@ -1,8 +1,9 @@
 import {
+	BlockheightBasedTransactionConfirmationStrategy,
 	Connection,
 	Keypair,
 	PublicKey,
-	sendAndConfirmTransaction,
+	sendAndConfirmRawTransaction,
 	SendOptions,
 	Transaction,
 } from '@solana/web3.js'
@@ -74,12 +75,30 @@ export class Context {
 		transaction: Transaction,
 		options?: SendOptions,
 	): Promise<string> {
-		return sendAndConfirmTransaction(
+		const wireTransaction = transaction.serialize()
+		return sendAndConfirmRawTransaction(
 			this._connection,
-			transaction,
-			[],
+			wireTransaction,
+			<BlockheightBasedTransactionConfirmationStrategy>{
+				blockhash: transaction.recentBlockhash!,
+				lastValidBlockHeight: transaction.lastValidBlockHeight!,
+			},
 			options || this._sendOptions
 		)
+	}
+
+	/**
+	 * Set Lastest Blockhash for the transaction.
+	 */
+	async setLatestBlockhash(
+		transaction: Transaction,
+		force: boolean = false,
+	): Promise<void> {
+		if (force || (transaction.recentBlockhash === undefined && transaction.lastValidBlockHeight === undefined)) {
+			const latestBlockhash = await this.connection.getLatestBlockhash()
+			transaction.recentBlockhash = latestBlockhash.blockhash
+			transaction.lastValidBlockHeight = latestBlockhash.lastValidBlockHeight
+		}
 	}
 
 	/**
@@ -89,11 +108,13 @@ export class Context {
 		transaction: Transaction,
 		options?: SendOptions,
 	): Promise<string> {
+		await this.setLatestBlockhash(transaction)
+		if (transaction.feePayer === undefined) {
+			transaction.feePayer = this._signer.default()
+		}
 		await this._signer.sign(transaction)
-		return sendAndConfirmTransaction(
-			this._connection,
+		return this.sendTransaction(
 			transaction,
-			[],
 			options || this._sendOptions
 		)
 	}
