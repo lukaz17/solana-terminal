@@ -56,7 +56,7 @@ export async function setMetadataForFungibleToken(
 ): Promise<string> {
 	const tokenMetadataAccount = await getMetadataAccountForTokenMint(ctx, tokenMint)
 	const transaction = new Transaction()
-	if(tokenMetadataAccount == null) {
+	if(tokenMetadataAccount === null) {
 		transaction.add(createMetadataForFungibleTokenIx(
 			tokenMint,
 			name,

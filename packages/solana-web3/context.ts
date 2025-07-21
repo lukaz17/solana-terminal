@@ -1,5 +1,4 @@
 import {
-	BlockheightBasedTransactionConfirmationStrategy,
 	Connection,
 	Keypair,
 	PublicKey,
@@ -79,10 +78,6 @@ export class Context {
 		return sendAndConfirmRawTransaction(
 			this._connection,
 			wireTransaction,
-			<BlockheightBasedTransactionConfirmationStrategy>{
-				blockhash: transaction.recentBlockhash!,
-				lastValidBlockHeight: transaction.lastValidBlockHeight!,
-			},
 			options || this._sendOptions
 		)
 	}
