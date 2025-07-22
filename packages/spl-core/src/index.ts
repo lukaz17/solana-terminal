@@ -1,8 +1,9 @@
 export {
-	MINT_SIZE as TOKEN_MINT_SPAN
+	MINT_SIZE as TOKEN_MINT_SPAN,
 } from '@solana/spl-token'
 export type {
-	Mint as TokenMint
+	Account as TokenAccount,
+	Mint as TokenMint,
 } from '@solana/spl-token'
 
 export {
@@ -20,7 +21,9 @@ export {
 } from './mpl-token-metadata'
 
 export {
+	createAssociatedTokenAccountIx,
 	createTokenMintIx,
+	deserializeTokenAccountAccount,
 	deserializeTokenMintAccount,
 	findAssociatedTokenAccountAddress,
 } from './spl-token'

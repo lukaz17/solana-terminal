@@ -1,9 +1,13 @@
 import {
 	ACCOUNT_SIZE,
 	ACCOUNT_TYPE_SIZE,
+	Account,
+	AccountLayout,
+	AccountState,
 	MINT_SIZE,
 	Mint,
 	MintLayout,
+	createAssociatedTokenAccountInstruction,
 	createInitializeMintInstruction,
 } from '@solana/spl-token'
 import {
@@ -14,6 +18,28 @@ import {
 	ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
 	TOKEN_PROGRAM_ID,
 } from './constants'
+
+/**
+ * Create a Create Associated Token Account instruction.
+ */
+export function createAssociatedTokenAccountIx(
+	tokenMint: PublicKey,
+	owner: PublicKey,
+	payer: PublicKey,
+): TransactionInstruction {
+	const associatedTokenAccount = findAssociatedTokenAccountAddress(
+		tokenMint,
+		owner,
+	)
+	return createAssociatedTokenAccountInstruction(
+		payer,
+		associatedTokenAccount,
+		owner,
+		tokenMint,
+		TOKEN_PROGRAM_ID,
+		ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
+	)
+}
 
 /**
  * Create a InitializeMint instruction.
@@ -30,6 +56,32 @@ export function createTokenMintIx(
 		mintAuthority,
 		freezeAuthority
 	)
+}
+
+/**
+ * Deserialize account data into Token Account object.
+ */
+export function deserializeTokenAccountAccount(
+	data: Buffer,
+): Account {
+	const rawAccount = AccountLayout.decode(data)
+	let tlvData = Buffer.alloc(0)
+	if (data.length > ACCOUNT_SIZE) {
+		tlvData = data.slice(ACCOUNT_SIZE + ACCOUNT_TYPE_SIZE)
+	}
+	return <Account>{
+		mint: rawAccount.mint,
+		owner: rawAccount.owner,
+		amount: rawAccount.amount,
+		delegate: rawAccount.delegateOption ? rawAccount.delegate : null,
+		delegatedAmount: rawAccount.delegatedAmount,
+		isInitialized: rawAccount.state !== AccountState.Uninitialized,
+		isFrozen: rawAccount.state === AccountState.Frozen,
+		isNative: !!rawAccount.isNativeOption,
+		rentExemptReserve: rawAccount.isNativeOption ? rawAccount.isNative : null,
+		closeAuthority: rawAccount.closeAuthorityOption ? rawAccount.closeAuthority : null,
+		tlvData,
+	}
 }
 
 /**
@@ -58,8 +110,8 @@ export function deserializeTokenMintAccount(
  * Find derived address for Associated Token account of a Token Mint.
  */
 export function findAssociatedTokenAccountAddress(
-	owner: PublicKey,
 	tokenMint: PublicKey,
+	owner: PublicKey,
 ): PublicKey {
 	const [address,] = PublicKey.findProgramAddressSync(
 		[
