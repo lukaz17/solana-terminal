@@ -16,3 +16,7 @@ export {
 	createTokenMint,
 	getTokenMintAccount,
 } from './spl-token'
+
+export {
+	createAccountIx,
+} from './system'

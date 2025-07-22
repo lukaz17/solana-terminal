@@ -9,12 +9,14 @@ import {
 	Keypair,
 	PublicKey,
 	SendOptions,
-	SystemProgram,
 	Transaction,
 } from '@solana/web3.js'
 import {
 	Context,
 } from './context'
+import {
+	createAccountIx,
+} from './system'
 
 /**
  * Create new Token Mint Account.
@@ -26,14 +28,12 @@ export async function createTokenMint(
 	sendOptions?: SendOptions,
 ): Promise<string> {
 	const transaction = new Transaction()
-	const tokenMintRentExemption = await ctx.connection.getMinimumBalanceForRentExemption(TOKEN_MINT_SPAN)
-	transaction.add(SystemProgram.createAccount({
-		fromPubkey: ctx.signer.default(),
-		newAccountPubkey: tokenMintKeypair.publicKey,
-		lamports: tokenMintRentExemption,
-		space: TOKEN_MINT_SPAN,
-		programId: TOKEN_PROGRAM_ID,
-	}))
+	transaction.add(await createAccountIx(
+		ctx,
+		tokenMintKeypair.publicKey,
+		TOKEN_MINT_SPAN,
+		TOKEN_PROGRAM_ID,
+	))
 	transaction.add(createTokenMintIx(
 		tokenMintKeypair.publicKey,
 		decimals,
