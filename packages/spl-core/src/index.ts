@@ -26,4 +26,6 @@ export {
 	deserializeTokenAccountAccount,
 	deserializeTokenMintAccount,
 	findAssociatedTokenAccountAddress,
+	mintTokenIx,
+	transferTokenIx,
 } from './spl-token'

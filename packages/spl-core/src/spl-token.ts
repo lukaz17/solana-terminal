@@ -9,6 +9,8 @@ import {
 	MintLayout,
 	createAssociatedTokenAccountInstruction,
 	createInitializeMintInstruction,
+	createMintToInstruction,
+	createTransferInstruction,
 } from '@solana/spl-token'
 import {
 	PublicKey,
@@ -122,4 +124,42 @@ export function findAssociatedTokenAccountAddress(
 		ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
 	)
 	return address
+}
+
+/**
+ * Create a MintTo instruction.
+ */
+export function mintTokenIx(
+	tokenMint: PublicKey,
+	recipientAccount: PublicKey,
+	amount: bigint,
+	mintAuthority: PublicKey,
+): TransactionInstruction {
+	return createMintToInstruction(
+		tokenMint,
+		recipientAccount,
+		mintAuthority,
+		amount,
+		[],
+		TOKEN_PROGRAM_ID,
+	)
+}
+
+/**
+ * Create a Transfer instruction.
+ */
+export function transferTokenIx(
+	senderAccount: PublicKey,
+	recipientAccount: PublicKey,
+	amount: bigint,
+	ownerOrDelegate: PublicKey,
+): TransactionInstruction {
+	return createTransferInstruction(
+		senderAccount,
+    recipientAccount,
+    ownerOrDelegate,
+    amount,
+    [],
+    TOKEN_PROGRAM_ID,
+	)
 }
