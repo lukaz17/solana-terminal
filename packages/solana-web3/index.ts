@@ -13,7 +13,9 @@ export {
 } from './mpl-token-metadata'
 
 export {
+	createAssociatedTokenAccount,
 	createTokenMint,
+	getTokenAccountAccount,
 	getTokenMintAccount,
 } from './spl-token'
 

@@ -1,8 +1,11 @@
 import {
 	TOKEN_MINT_SPAN,
 	TOKEN_PROGRAM_ID,
+	TokenAccount,
 	TokenMint,
+	createAssociatedTokenAccountIx,
 	createTokenMintIx,
+	deserializeTokenAccountAccount,
 	deserializeTokenMintAccount,
 } from '@local/spl-core'
 import {
@@ -17,6 +20,24 @@ import {
 import {
 	createAccountIx,
 } from './system'
+
+/**
+ * Create an Associated Token Account of a Token Mint for spcecified Owner.
+ */
+export async function createAssociatedTokenAccount(
+	ctx: Context,
+	tokenMint: PublicKey,
+	owner: PublicKey,
+	sendOptions?: SendOptions,
+): Promise<string> {
+	const transaction = new Transaction()
+	transaction.add(createAssociatedTokenAccountIx(
+		tokenMint,
+		owner,
+		ctx.signer.default(),
+	))
+	return ctx.signAndSendTransaction(transaction, sendOptions)
+}
 
 /**
  * Create new Token Mint Account.
@@ -45,6 +66,23 @@ export async function createTokenMint(
 	transaction.partialSign(tokenMintKeypair)
 	return ctx.signAndSendTransaction(transaction, sendOptions)
 }
+
+/**
+ * Get and deserialize Token Account Account using its address.
+ */
+export async function getTokenAccountAccount(
+	ctx: Context,
+	tokenAccount: PublicKey
+): Promise<TokenAccount | null> {
+	const tokenAccountAccInfo = await ctx.connection.getAccountInfo(tokenAccount)
+	if (tokenAccountAccInfo === null) {
+		return null
+	}
+	const tokenAccountAccount = deserializeTokenAccountAccount(tokenAccountAccInfo.data)
+	tokenAccountAccount.address = tokenAccount
+	return tokenAccountAccount
+}
+
 
 /**
  * Get and deserialize Token Mint Account using its address.
