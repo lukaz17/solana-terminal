@@ -8,6 +8,7 @@ import {
 	deserializeTokenAccountAccount,
 	deserializeTokenMintAccount,
 	findAssociatedTokenAccountAddress,
+	mintTokenIx,
 } from '@local/spl-core'
 import {
 	Keypair,
@@ -107,4 +108,38 @@ export async function getTokenMintAccount(
 	const tokenMintAccount = deserializeTokenMintAccount(tokenMintAccInfo.data)
 	tokenMintAccount.address = tokenMint
 	return tokenMintAccount
+}
+
+/**
+ * Mint token. Recipient's ATA will be created if not exists.
+ */
+export async function mintToken(
+	ctx: Context,
+	tokenMint: PublicKey,
+	recipient: PublicKey,
+	amount: bigint,
+	sendOptions?: SendOptions,
+): Promise<string> {
+	const transaction = new Transaction()
+	const associatedTokenAccount = findAssociatedTokenAccountAddress(
+		tokenMint,
+		recipient,
+	)
+	const associatedTokenAccountAccount = await getTokenAccountAccount(ctx, associatedTokenAccount)
+	if (associatedTokenAccountAccount === null) {
+		transaction.add(createAssociatedTokenAccountIx(
+			tokenMint,
+			recipient,
+			ctx.defaultSigner,
+		))
+	}
+	transaction.add(mintTokenIx(
+		tokenMint,
+		associatedTokenAccount,
+		amount,
+		ctx.defaultSigner,
+	))
+	const txSig = await ctx.signAndSendTransaction(transaction, sendOptions)
+	console.debug(`Minted ${amount} token units to ${recipient}: ${txSig}`)
+	return txSig
 }

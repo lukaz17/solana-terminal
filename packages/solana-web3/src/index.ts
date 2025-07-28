@@ -17,6 +17,7 @@ export {
 	createTokenMint,
 	getTokenAccountAccount,
 	getTokenMintAccount,
+	mintToken,
 } from './spl-token'
 
 export {
