@@ -23,6 +23,9 @@ importers:
       '@local/solana-web3':
         specifier: workspace:*
         version: link:../../packages/solana-web3
+      '@local/spl-core':
+        specifier: workspace:*
+        version: link:../../packages/spl-core
       '@solana/web3.js':
         specifier: ^1.98.1
         version: 1.98.2(bufferutil@4.0.9)(typescript@5.8.2)(utf-8-validate@5.0.10)
