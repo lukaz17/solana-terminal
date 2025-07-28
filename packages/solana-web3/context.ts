@@ -35,6 +35,10 @@ export class Context {
 		return this._connection
 	}
 
+	get defaultSigner(): PublicKey {
+		return this._signer.default()
+	}
+
 	get signer(): Signer {
 		return this._signer
 	}
@@ -97,6 +101,21 @@ export class Context {
 	}
 
 	/**
+	 * Sign the transaction.
+	 */
+	async sign(
+		transaction: Transaction,
+	): Promise<void> {
+		const signatures = transaction.signatures.filter(
+			sig => sig.signature !== null
+		)
+		await this._signer.sign(transaction)
+		for (const sig of signatures) {
+			transaction.addSignature(sig.publicKey, sig.signature!)
+		}
+	}
+
+	/**
 	 * Sign then send transaction and wait until it is confirmed.
 	 */
 	async signAndSendTransaction(
@@ -105,9 +124,9 @@ export class Context {
 	): Promise<string> {
 		await this.setLatestBlockhash(transaction)
 		if (transaction.feePayer === undefined) {
-			transaction.feePayer = this._signer.default()
+			transaction.feePayer = this.defaultSigner
 		}
-		await this._signer.sign(transaction)
+		await this.sign(transaction)
 		return this.sendTransaction(
 			transaction,
 			options || this._sendOptions

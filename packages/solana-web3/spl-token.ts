@@ -7,6 +7,7 @@ import {
 	createTokenMintIx,
 	deserializeTokenAccountAccount,
 	deserializeTokenMintAccount,
+	findAssociatedTokenAccountAddress,
 } from '@local/spl-core'
 import {
 	Keypair,
@@ -34,9 +35,15 @@ export async function createAssociatedTokenAccount(
 	transaction.add(createAssociatedTokenAccountIx(
 		tokenMint,
 		owner,
-		ctx.signer.default(),
+		ctx.defaultSigner,
 	))
-	return ctx.signAndSendTransaction(transaction, sendOptions)
+	const txSig = await ctx.signAndSendTransaction(transaction, sendOptions)
+	const associatedTokenAccount = findAssociatedTokenAccountAddress(
+		tokenMint,
+		owner,
+	)
+	console.debug(`Created Associated Token Account ${associatedTokenAccount}: ${txSig}`)
+	return txSig
 }
 
 /**
@@ -62,9 +69,11 @@ export async function createTokenMint(
 		null,
 	))
 	await ctx.setLatestBlockhash(transaction)
-	transaction.feePayer = ctx.signer.default()
-	transaction.partialSign(tokenMintKeypair)
-	return ctx.signAndSendTransaction(transaction, sendOptions)
+	transaction.feePayer = ctx.defaultSigner
+	transaction.sign(tokenMintKeypair)
+	const txSig = await ctx.signAndSendTransaction(transaction, sendOptions)
+	console.debug(`Created Token Mint ${tokenMintKeypair.publicKey}: ${txSig}`)
+	return txSig
 }
 
 /**
